@@ -1,0 +1,18 @@
+services:
+  db:
+    image: 'mysql:8.3.0'
+    volumes:
+      - "/Users/mario/Personal/temp/docker/.tmpdata/mysql/8.3.0/data:/var/lib/mysql"
+    ports:
+      - "3310:3306"
+    environment:
+      - MYSQL_DATABASE=auth-db
+      - MYSQL_ROOT_PASSWORD=${ROOT_PASS:-root@123}
+      - MYSQL_USER=authdbuser
+      - MYSQL_PASSWORD=${AUTH_DB_PASS:-P@$5wd}
+    healthcheck:
+      test: ["cmd", "mysqladmin", "ping", "-u", "$$MYSQL_USER", "-p", "$$MYSQL_PASSWORD"]
+      start_period: 3s
+      interval: 10s
+      timeout: 10s
+      retries: 3

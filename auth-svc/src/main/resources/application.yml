@@ -4,3 +4,14 @@ server:
 logging:
   level:
     org.springframework.security: trace
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+  jpa:
+    open-in-view: false
+    show-sql: true
+
+

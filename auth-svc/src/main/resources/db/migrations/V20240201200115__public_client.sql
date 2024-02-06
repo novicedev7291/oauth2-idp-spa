@@ -20,4 +20,6 @@ insert into client(
         "{\"authorization-code-time-to-live\":5,\"access-token-time-to-live\":5,\"access-token-format\":\"self-contained\",\"device-code-time-to-live\":5,\"reuse-refresh-tokens\":true,\"refresh-token-time-to-live\":60,\"id-token-signature-algorithm\":\"RS256\"}"
     );
 
+insert into users(username, password) values("kuldeep", "{bcrypt}$2b$10$XUHqvNpNjsN5AA60LB/oH.CVjHhbQKEUq335sgCa314rtimKlmvSa");
+
 

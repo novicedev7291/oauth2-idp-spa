@@ -54,9 +54,18 @@ CREATE TABLE authorization (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE authorizationConsent (
+CREATE TABLE authorization_consent (
     registered_client_id varchar(255) NOT NULL,
     principal_name varchar(255) NOT NULL,
     authorities varchar(1000) NOT NULL,
     PRIMARY KEY (registered_client_id, principal_name)
+);
+
+create table users (
+    id int primary key auto_increment not null,
+    username varchar(100) not null,
+    password varchar(200) not null,
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp,
+    constraint `uk_username` unique key(`username`)
 );

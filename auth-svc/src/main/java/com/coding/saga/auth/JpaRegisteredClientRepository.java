@@ -3,6 +3,7 @@ package com.coding.saga.auth;
 /**
  * @author <a href="kuldeepyadav7291@gmail.com">Kuldeep</a>
  */
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +16,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
+import org.springframework.security.oauth2.server.authorization.settings.AbstractSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -88,8 +92,7 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
         Map<String, Object> clientSettingsMap = parseMap(client.getClientSettings());
         builder.clientSettings(ClientSettings.withSettings(clientSettingsMap).build());
 
-        Map<String, Object> tokenSettingsMap = parseMap(client.getTokenSettings());
-        builder.tokenSettings(TokenSettings.withSettings(tokenSettingsMap).build());
+        builder.tokenSettings(from(parseInto(client.getTokenSettings(), RawTokenSettings.class)));
 
         return builder.build();
     }
@@ -119,6 +122,31 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
         entity.setTokenSettings(writeMap(registeredClient.getTokenSettings().getSettings()));
 
         return entity;
+    }
+
+    private TokenSettings from(RawTokenSettings s) {
+        return TokenSettings.builder()
+                .idTokenSignatureAlgorithm(SignatureAlgorithm.from(s.getIdTokenSignatureAlgo()))
+                .accessTokenFormat(tokenFormat(s.getAccessCodeFmt()))
+                .accessTokenTimeToLive(Duration.ofMinutes(s.getAccessTokenTTL()))
+                .authorizationCodeTimeToLive(Duration.ofMinutes(s.getAuthorizationCodeTTL()))
+                .reuseRefreshTokens(s.getReuseRefreshTokens())
+                .refreshTokenTimeToLive(Duration.ofMinutes(s.getRefreshTokenTTL()))
+                .deviceCodeTimeToLive(Duration.ofMinutes(s.getDeviceCodeTTL()))
+                .build();
+    }
+
+    private OAuth2TokenFormat tokenFormat(String tokenFmt) {
+        return OAuth2TokenFormat.SELF_CONTAINED.getValue().equals(tokenFmt)
+                ? OAuth2TokenFormat.SELF_CONTAINED : OAuth2TokenFormat.REFERENCE;
+    }
+
+    private <T> T parseInto(String data, Class<T> clazz) {
+        try {
+            return (T) this.objectMapper.readValue(data, clazz);
+        } catch (Exception ex) {
+            throw new IllegalArgumentException(ex.getMessage(), ex);
+        }
     }
 
     private Map<String, Object> parseMap(String data) {

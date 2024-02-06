@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <log4j2.version>2.21.1</log4j2.version>
         <flyway.version>8.3.0</flyway.version>
+        <mysql-client.version>8.0.13</mysql-client.version>
     </properties>
     <dependencies>
         <dependency>
@@ -34,6 +35,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

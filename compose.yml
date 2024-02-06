@@ -1,3 +1,7 @@
+networks:
+  localdev:
+    driver: bridge
+
 services:
   db:
     image: 'mysql:8.3.0'
@@ -16,3 +20,27 @@ services:
       interval: 10s
       timeout: 10s
       retries: 3
+    networks:
+      - localdev
+  auth:
+    build: ./auth-svc/Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - DB_URL=mysql:jdbc://db/auth-db
+      - DB_USER=authdbuser
+      - DB_PASS=P@$5wd
+    depends_on:
+      - db
+    networks:
+      - localdev
+  userresourcesvc:
+    build: ./user-resource-svc/Dockerfile
+    ports:
+      - "9091:9091"
+    environment:
+      - JWT_ISSUER_URL=http://auth
+    depends_on:
+      - auth
+    networks:
+      - localdev

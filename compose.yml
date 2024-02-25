@@ -44,3 +44,12 @@ services:
       - auth
     networks:
       - localdev
+  useradmin:
+    build: ./user-admin-ui/Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - auth
+      - userresourcesvc
+    networks:
+      - localdev

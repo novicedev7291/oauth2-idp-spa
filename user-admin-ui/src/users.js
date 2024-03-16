@@ -1,7 +1,7 @@
 import { LocalStorage } from './storage';
 import { TOKEN_KEY } from './utils';
 
-const USER_SERVER_URL = "http://localhost:8080";
+const USER_SERVER_URL = "http://localhost:9091";
 
 export async function allUsers() {
     let resp = await fetch(`${USER_SERVER_URL}/users`, {

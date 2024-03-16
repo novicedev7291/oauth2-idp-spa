@@ -1,17 +1,21 @@
 insert into client(
+    id,
     client_id,
     client_secret,
     client_id_issued_at,
+    client_name,
     client_authentication_methods,
     authorization_grant_types,
     redirect_uris,
-    post_logout_redirect_uris,
     scopes,
-    client_settings
+    client_settings,
+    token_settings
     ) values (
+        "fbf7e58cc6da3030cf628198012584f617914167aeb0e68bf6d0de61488f08ae",
         "public-web-client",
         "{noop}secret",
         now(),
+        "public-web-client",
         "none",
         "authorization_code",
         "http://localhost:5173/oauth2/callback",

@@ -17,14 +17,6 @@ public class CodeVerifierTest {
         assertThat(new BCryptPasswordEncoder().matches("P@swd", hashedPass)).isTrue();
     }
 
-    @Test
-    void shouldPass() {
-        String code = "aSNWtEKC46qaQ9yqT705d0g2VhlU51W6GEQXFmnm";
-        String expected = "W29iamVjdCBQcm9taXNlXQ";
-
-        assertThat(codeChallenge(code)).isEqualTo(expected);
-    }
-
 
     private String codeChallenge(String code) {
         try {

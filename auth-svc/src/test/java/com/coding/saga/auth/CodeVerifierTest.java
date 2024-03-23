@@ -17,7 +17,6 @@ public class CodeVerifierTest {
         assertThat(new BCryptPasswordEncoder().matches("P@swd", hashedPass)).isTrue();
     }
 
-
     private String codeChallenge(String code) {
         try {
             MessageDigest algo = MessageDigest.getInstance("SHA-256");

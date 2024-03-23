@@ -3,16 +3,9 @@ package com.coding.saga.auth;
 /**
  * @author <a href="kuldeepyadav7291@gmail.com">Kuldeep</a>
  */
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.security.jackson2.SecurityJackson2Modules;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -20,13 +13,19 @@ import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
-import org.springframework.security.oauth2.server.authorization.settings.AbstractSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 public class JpaRegisteredClientRepository implements RegisteredClientRepository {
@@ -89,7 +88,7 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
                                                            .postLogoutRedirectUris((uris) -> uris.addAll(postLogoutRedirectUris))
                                                            .scopes((scopes) -> scopes.addAll(clientScopes));
 
-        Map<String, Object> clientSettingsMap = parseMap(client.getClientSettings());
+        Map<String, Object> clientSettingsMap = parseInto(client.getClientSettings(), Collections.<String, Object>unmodifiableMap(Collections.emptyMap()).getClass());
         builder.clientSettings(ClientSettings.withSettings(clientSettingsMap).build());
 
         builder.tokenSettings(from(parseInto(client.getTokenSettings(), RawTokenSettings.class)));
@@ -125,9 +124,10 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
     }
 
     private TokenSettings from(RawTokenSettings s) {
-        return TokenSettings.builder()
+        return TokenSettings
+                .builder()
                 .idTokenSignatureAlgorithm(SignatureAlgorithm.from(s.getIdTokenSignatureAlgo()))
-                .accessTokenFormat(tokenFormat(s.getAccessCodeFmt()))
+                .accessTokenFormat(tokenFormat(s.getAccessTokenFmt()))
                 .accessTokenTimeToLive(Duration.ofMinutes(s.getAccessTokenTTL()))
                 .authorizationCodeTimeToLive(Duration.ofMinutes(s.getAuthorizationCodeTTL()))
                 .reuseRefreshTokens(s.getReuseRefreshTokens())
@@ -144,15 +144,6 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
     private <T> T parseInto(String data, Class<T> clazz) {
         try {
             return (T) this.objectMapper.readValue(data, clazz);
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(ex.getMessage(), ex);
-        }
-    }
-
-    private Map<String, Object> parseMap(String data) {
-        try {
-            return this.objectMapper.readValue(data, new TypeReference<Map<String, Object>>() {
-            });
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex.getMessage(), ex);
         }

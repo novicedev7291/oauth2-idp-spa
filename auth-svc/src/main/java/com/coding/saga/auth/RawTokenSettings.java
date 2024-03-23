@@ -1,17 +1,19 @@
 package com.coding.saga.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * @author <a href="kuldeepyadav7291@gmail.com">Kuldeep</a>
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 class RawTokenSettings {
     @JsonProperty("authorization-code-time-to-live")
     private Integer authorizationCodeTTL;
     @JsonProperty("access-token-time-to-live")
     private Integer accessTokenTTL;
-    @JsonProperty("access-code-format")
-    private String accessCodeFmt;
+    @JsonProperty("access-token-format")
+    private String accessTokenFmt;
 
     @JsonProperty("device-code-time-to-live")
     private Integer deviceCodeTTL;
@@ -40,12 +42,12 @@ class RawTokenSettings {
         return this;
     }
 
-    public String getAccessCodeFmt() {
-        return accessCodeFmt;
+    public String getAccessTokenFmt() {
+        return accessTokenFmt;
     }
 
-    public RawTokenSettings setAccessCodeFmt(String accessCodeFmt) {
-        this.accessCodeFmt = accessCodeFmt;
+    public RawTokenSettings setAccessTokenFmt(String accessTokenFmt) {
+        this.accessTokenFmt = accessTokenFmt;
         return this;
     }
 

@@ -20,8 +20,9 @@ insert into client(
         "authorization_code",
         "http://localhost:5173/oauth2/callback",
         "openid,profile",
-        "{\"require-proof-key\":true,\"require-authorization-consent\":true}",
-        "{\"authorization-code-time-to-live\":5,\"access-token-time-to-live\":5,\"access-token-format\":\"self-contained\",\"device-code-time-to-live\":5,\"reuse-refresh-tokens\":true,\"refresh-token-time-to-live\":60,\"id-token-signature-algorithm\":\"RS256\"}"
+        -- @class attribute required here, bcoz objectMapper used in deserialization expects the subtype info due to used mixin - see JpaRegisteredClientRepository Impl objectMapper init & CoreJackson2Module registered on same objectMapper
+        "{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.client.require-proof-key\":true,\"settings.client.require-authorization-consent\":true}",
+        "{\"@class\":\"com.coding.saga.auth.RawTokenSettings\",\"authorization-code-time-to-live\":5,\"access-token-time-to-live\":5,\"access-token-format\":\"self-contained\",\"device-code-time-to-live\":5,\"reuse-refresh-tokens\":true,\"refresh-token-time-to-live\":60,\"id-token-signature-algorithm\":\"RS256\"}"
     );
 
 insert into users(username, password) values("kuldeep", "{bcrypt}$2b$10$XUHqvNpNjsN5AA60LB/oH.CVjHhbQKEUq335sgCa314rtimKlmvSa");

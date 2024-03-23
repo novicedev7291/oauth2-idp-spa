@@ -68,6 +68,7 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated()
         ).formLogin(Customizer.withDefaults());
+
         return http.build();
     }
 

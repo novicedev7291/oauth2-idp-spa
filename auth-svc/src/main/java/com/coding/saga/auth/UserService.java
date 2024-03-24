@@ -1,9 +1,12 @@
 package com.coding.saga.auth;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 /**
  * @author <a href="kuldeepyadav7291@gmail.com">Kuldeep</a>
@@ -20,6 +23,11 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("No user find with username " + username));
         return new OAuth2UserDetails()
                 .username(user.getUsername())
-                .password(user.getPassword());
+                .password(user.getPassword())
+                .setAuthorities(Collections.singletonList(new SimpleGrantedAuthority("RES_USER")))
+                .setEnabled(true)
+                .setAccountNonExpired(true)
+                .setAccountNonLocked(true)
+                .setCredentialsNonExpired(true);
     }
 }

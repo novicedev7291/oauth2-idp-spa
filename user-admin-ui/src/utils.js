@@ -39,6 +39,7 @@ export function createTokenUrl(tokenServerUrl, clientId, redirectUri,
 }
 
 export async function processMessage(message, tokenFetcher, onTokenSuccess, onError) {
+    console.info("Processing message from authN dialog...");
     const type = message && message.data && message.data.type;
     if (type === OAUTH_RESPONSE) {
         const errorMaybe = message.data.error;

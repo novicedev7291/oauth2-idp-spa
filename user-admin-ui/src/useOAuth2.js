@@ -79,6 +79,7 @@ export function useOAuth({ authorizeUrl, clientId, redirectUri, scope, tokenUrl,
         }
 
         async function handleMessage(message) {
+            console.info("handleMessage callback is invoked....");
             try {
                 const codeVerifier = SessionStorage.get(OAUTH_CODE_KEY);
                 await processMessage(
@@ -94,6 +95,7 @@ export function useOAuth({ authorizeUrl, clientId, redirectUri, scope, tokenUrl,
                     error: genericError.toString()
                 });
             } finally {
+                console.info("cleaning up the dialog related resources...");
                 // clean everything here
                 cleanup(dialogRef, intervalRef, handleMessage);
             }

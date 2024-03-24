@@ -43,19 +43,19 @@ services:
     ports:
       - "9091:9091"
     environment:
-      - JWT_ISSUER_URL=http://auth
+      - JWT_ISSUER_URL=http://auth:9000
     depends_on:
       - auth
     networks:
       - localdev
-  useradmin:
-    build:
-      context: .
-      dockerfile: ./user-admin-ui/Dockerfile
-    ports:
-      - "5173:80"
-    depends_on:
-      - auth
-      - userresourcesvc
-    networks:
-      - localdev
+#  useradmin:
+#    build:
+#      context: .
+#      dockerfile: ./user-admin-ui/Dockerfile
+#    ports:
+#      - "5173:80"
+#    depends_on:
+#      - auth
+#      - userresourcesvc
+#    networks:
+#      - localdev

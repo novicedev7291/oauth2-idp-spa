@@ -1,0 +1,61 @@
+networks:
+  localdev:
+    driver: bridge
+
+services:
+  db:
+    image: 'mysql:8.3.0'
+    volumes:
+      - "/Users/mario/Personal/temp/docker/.tmpdata/mysql/8.3.0/data:/var/lib/mysql"
+    ports:
+      - "3310:3306"
+    environment:
+      - MYSQL_DATABASE=auth-db
+      - MYSQL_ROOT_PASSWORD=${ROOT_PASS:-root@123}
+      - MYSQL_USER=authdbuser
+      - MYSQL_PASSWORD=${AUTH_DB_PASS:-P@$5wd}
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-u", "$$MYSQL_USER", "-p", "$$MYSQL_PASSWORD" ]
+      start_period: 3s
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    networks:
+      - localdev
+  auth:
+    build:
+      context: .
+      dockerfile: ./auth-svc/Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - DB_URL=jdbc:mysql://db/auth-db
+      - DB_USER=authdbuser
+      - DB_PASS=P@$5wd
+    depends_on:
+      - db
+    networks:
+      - localdev
+  userresourcesvc:
+    build:
+      context: .
+      dockerfile: ./user-resource-svc/Dockerfile
+    ports:
+      - "9091:9091"
+    environment:
+      - JWT_ISSUER_URL=http://auth:9000
+    depends_on:
+      - auth
+    networks:
+      - localdev
+#  useradmin:
+#    build:
+#      context: .
+#      dockerfile: ./user-admin-ui/Dockerfile
+#    ports:
+#      - "5173:80"
+#    depends_on:
+#      - auth
+#      - userresourcesvc
+#    networks:
+#      - localdev

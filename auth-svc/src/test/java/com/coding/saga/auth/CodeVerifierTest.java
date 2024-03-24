@@ -1,6 +1,7 @@
 package com.coding.saga.auth;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -10,15 +11,11 @@ import java.util.Base64;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodeVerifierTest {
-
     @Test
-    void shouldPass() {
-        String code = "aSNWtEKC46qaQ9yqT705d0g2VhlU51W6GEQXFmnm";
-        String expected = "W29iamVjdCBQcm9taXNlXQ";
-
-        assertThat(codeChallenge(code)).isEqualTo(expected);
+    void shouldPassBcryptEncPassword() {
+        String hashedPass = "$2b$10$XUHqvNpNjsN5AA60LB/oH.CVjHhbQKEUq335sgCa314rtimKlmvSa";
+        assertThat(new BCryptPasswordEncoder().matches("P@swd", hashedPass)).isTrue();
     }
-
 
     private String codeChallenge(String code) {
         try {

@@ -18,11 +18,11 @@ function build {
         mvn install
     fi
 
-#    cd user-admin-ui
-#    npm install
-#    npm run build
-#
-#    cd ..
+    cd user-admin-ui
+    npm install
+    npm run build
+
+    cd ..
 
     echo "creating temp directories to copy build artifacts..."
     mkdir -p $AUTH_TEMP_DIR $USER_RESOURCE_TEMP_DIR $USER_ADMIN_TEMP_DIR
@@ -38,16 +38,16 @@ function build {
 }
 
 function show_logs {
-    (cd docker && exec docker-compose logs)
+    (cd docker && exec docker compose logs)
 }
 
 function docker_build {
     cd docker
     #TOCHECK: it seems to update any dependencies as well?
     if [[ "$3" == "plainlogs" ]]; then
-        docker-compose build --progress=plain $2
+        docker compose build --progress=plain $2
     else
-        docker-compose build $2
+        docker compose build $2
     fi
     cd ..
 }
@@ -64,7 +64,7 @@ function cleanup {
 }
 
 function docker_down {
-    (cd docker && exec docker-compose down)
+    (cd docker && exec docker compose down)
 }
 
 if [[ "$1" == "clean" ]]; then

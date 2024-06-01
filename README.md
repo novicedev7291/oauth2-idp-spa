@@ -60,8 +60,8 @@ Running inside docker is straightforward, there is a shell utility which will ma
 2. `./util.sh rebuild-image all`
 3. `./util.sh run`
 
-Above will only run both the svc inside docker, but you have to run the UI the same way as mentioned above, currently
-there is a bug when running UI in docker behind `nginx` proxy. See the issues section for more detail.
+~~Above will only run both the svc inside docker, but you have to run the UI the same way as mentioned above, currently
+there is a bug when running UI in docker behind `nginx` proxy. See the issues section for more detail.~~
 
 To stop the running containers, run below:
 `./util.sh down`
